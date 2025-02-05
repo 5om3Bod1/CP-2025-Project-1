@@ -12,7 +12,7 @@ public class testUno : MonoBehaviour
     {
         //Mac - /dev/cu.usbmodem1101
         //PC - COM
-        sp = new SerialPort("/dev/cu.usbmodem1101", 9600);
+        sp = new SerialPort("/dev/cu.usbmodem11201", 9600);
         sp.Open();
 
         while (true)

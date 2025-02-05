@@ -17,17 +17,15 @@ public class bubbleGen : MonoBehaviour
 
     int messageInt;
 
-    public AudioSource audioSource;
-
     Thread IOThread = new Thread(DataThread);
     private static SerialPort sp;
     private static string incomingMsg = "";
 
     private static void DataThread()
     {
-        //Mac - /dev/cu.usbmodem1101
-        //PC - COM
-        sp = new SerialPort("/dev/cu.usbmodem11301", 9600);
+        // Mac - /dev/cu.usbmodem1101
+        // PC - COM
+        sp = new SerialPort("/dev/cu.usbmodem11201", 9600);
         sp.Open();
 
         while (true)
@@ -37,95 +35,92 @@ public class bubbleGen : MonoBehaviour
         }
     }
 
-    private void OnDestory()
+    private void OnDestroy()
     {
-        IOThread.Abort();
-        sp.Close();
+        if (IOThread != null && IOThread.IsAlive)
+        {
+            IOThread.Abort();
+        }
+
+        if (sp != null && sp.IsOpen)
+        {
+            sp.Close();
+        }
     }
 
     private void Start()
     {
-        //StartCoroutine(myCounter());
+        // StartCoroutine(myCounter());
         IOThread.Start();
     }
+
     void Update()
     {
-        messageInt = int.Parse(incomingMsg);
-        Debug.Log(incomingMsg + " " + messageInt);
+        if (!string.IsNullOrEmpty(incomingMsg))
+        {
+            string trimmedMsg = incomingMsg.Trim();
 
-        //Note: make true or false instead of zero for new numbers
-        if (messageInt == 1)
-        {
-            bad();
-            incomingMsg = "0";
-        }
-        else if (messageInt == 2)
-        {
-            alright();
-            incomingMsg = "0";
-        }
-        else if (messageInt == 3)
-        {
-            good();
-            incomingMsg = "0";
-        }
+            if (int.TryParse(trimmedMsg, out messageInt))
+            {
+                Debug.Log(messageInt);
 
-        if (messageInt == 5)
-        {
-            playSound();
-            incomingMsg = "0";
+                bool processed = false;
+
+                if (messageInt == 1)
+                {
+                    bad();
+                    processed = true;
+                }
+                else if (messageInt == 2)
+                {
+                    alright();
+                    processed = true;
+                }
+                else if (messageInt == 3)
+                {
+                    good();
+                    processed = true;
+                }
+
+                if (processed)
+                {
+                    incomingMsg = "";
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to parse input: " + trimmedMsg);
+            }
         }
     }
-
-    /*
-    private IEnumerator myCounter()
-    {
-        if(totalAmount.Count > 0)
-        {
-            value = Random.Range(0, totalAmount.Count);
-            //Debug.Log("Location on list " + value);
-            int genThis = totalAmount[value];
-            //Debug.Log("It's value is " + genThis);
-            Vector3 randompawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
-            Instantiate(bubble[genThis], randompawnPosition, Quaternion.identity);
-        }
-        yield return new WaitForSeconds(.5f);
-        StartCoroutine(myCounter());
-    }
-    */
 
     void bad()
     {
-        totalAmount.Add(0);
-        textScript.Instnace.badNum++;
+        // totalAmount.Add(0);
+        // textScript.Instance.badNum++; // Fixed typo in "Instance"
 
         int genThis = 0;
         Vector3 randompawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
         Instantiate(bubble[genThis], randompawnPosition, Quaternion.identity);
     }
+
     void alright()
     {
-        totalAmount.Add(1);
-        textScript.Instnace.alrNum++;
+        // totalAmount.Add(1);
+        // textScript.Instance.alrNum++; // Fixed typo in "Instance"
 
         int genThis = 1;
         Vector3 randompawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
         Instantiate(bubble[genThis], randompawnPosition, Quaternion.identity);
     }
+
     void good()
     {
-        totalAmount.Add(2);
-        textScript.Instnace.goodNum++;
+        // totalAmount.Add(2);
+        // textScript.Instance.goodNum++; // Fixed typo in "Instance"
 
         int genThis = 2;
         Vector3 randompawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
         Instantiate(bubble[genThis], randompawnPosition, Quaternion.identity);
-    }
-    void playSound()
-    {
-        if (!audioSource.isPlaying)
-        {
-            audioSource.Play();
-        }
     }
 }

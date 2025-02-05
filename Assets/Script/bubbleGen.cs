@@ -120,7 +120,7 @@ public class bubbleGen : MonoBehaviour
         // textScript.Instance.goodNum++; // Fixed typo in "Instance"
 
         int genThis = 2;
-        Vector3 randompawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
+        Vector3 randompawnPosition = new Vector3(Random.Range(-2f,2f), 10.5f, Random.Range(26.6f, 30.6f));
         Instantiate(bubble[genThis], randompawnPosition, Quaternion.identity);
     }
 }

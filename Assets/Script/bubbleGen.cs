@@ -10,12 +10,16 @@ public class bubbleGen : MonoBehaviour
     public int value;
 
     //Total num of students to choose from
-    private List<int> totalAmount = new List<int>();
+    //private List<int> totalAmount = new List<int>();
 
     //Bubble Colors
     public GameObject[] bubble;
 
     int messageInt;
+
+    public AudioSource audioSource;
+
+    public Vector3 randomspawnPosition;
 
     Thread IOThread = new Thread(DataThread);
     private static SerialPort sp;
@@ -81,6 +85,11 @@ public class bubbleGen : MonoBehaviour
                     good();
                     processed = true;
                 }
+                else if (messageInt == 5)
+                {
+                    playSound();
+                    processed = true;
+                }
 
                 if (processed)
                 {
@@ -100,8 +109,8 @@ public class bubbleGen : MonoBehaviour
         // textScript.Instance.badNum++; // Fixed typo in "Instance"
 
         int genThis = 0;
-        Vector3 randompawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
-        Instantiate(bubble[genThis], randompawnPosition, Quaternion.identity);
+        //Vector3 randomspawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
+        Instantiate(bubble[genThis], randomspawnPosition, Quaternion.identity);
     }
 
     void alright()
@@ -110,8 +119,8 @@ public class bubbleGen : MonoBehaviour
         // textScript.Instance.alrNum++; // Fixed typo in "Instance"
 
         int genThis = 1;
-        Vector3 randompawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
-        Instantiate(bubble[genThis], randompawnPosition, Quaternion.identity);
+        //Vector3 randomspawnPosition = new Vector3(Random.Range(-2f, 2f), -3.75f, Random.Range(-2f, 2f));
+        Instantiate(bubble[genThis], randomspawnPosition, Quaternion.identity);
     }
 
     void good()
@@ -120,7 +129,14 @@ public class bubbleGen : MonoBehaviour
         // textScript.Instance.goodNum++; // Fixed typo in "Instance"
 
         int genThis = 2;
-        Vector3 randompawnPosition = new Vector3(Random.Range(-2f,2f), 10.5f, Random.Range(26.6f, 30.6f));
-        Instantiate(bubble[genThis], randompawnPosition, Quaternion.identity);
+        //Vector3 randomspawnPosition = new Vector3(Random.Range(-2f,2f), 10.5f, Random.Range(26.6f, 30.6f));
+        Instantiate(bubble[genThis], randomspawnPosition, Quaternion.identity);
+    }
+    void playSound()
+    {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
     }
 }
